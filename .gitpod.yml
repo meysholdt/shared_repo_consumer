@@ -1,3 +1,4 @@
+workspaceLocation: shared_repo_consumer/ws.code-workspace
 tasks:
   - name: Setup Repository
     init: |
