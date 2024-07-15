@@ -4,23 +4,29 @@ tasks:
     init: |
       # Clone the repository
       cd /workspace
-      git clone https://github.com/meysholdt/shared_repo.git
-      cd shared_repo
 
-      # Extract the user's email and create the branch name
-      USER_EMAIL=$(git config --global user.email)
-      BRANCH_NAME=$(echo $USER_EMAIL | cut -d '@' -f 1)
-
-      # Check if the branch exists
-      if git show-ref --quiet refs/heads/$BRANCH_NAME; then
-        echo "Branch $BRANCH_NAME already exists"
+      if [ -d "$REPO_DIR" ]; then
+        echo "Repository already exists in the workspace."
       else
-        echo "Branch $BRANCH_NAME does not exist, creating it"
-        # Create and push the new branch off of main
-        git checkout main
-        git checkout -b $BRANCH_NAME
-        git push -u origin $BRANCH_NAME
-      fi
+        # Clone the repository if it doesn't exist
+        git clone https://github.com/meysholdt/shared_repo.git
+        cd shared_repo
 
-      # Checkout the branch
-      git checkout $BRANCH_NAME
+        # Extract the user's email and create the branch name
+        USER_EMAIL=$(git config --global user.email)
+        BRANCH_NAME=$(echo $USER_EMAIL | cut -d '@' -f 1)
+
+        # Check if the branch exists
+        if git show-ref --quiet refs/heads/$BRANCH_NAME; then
+          echo "Branch $BRANCH_NAME already exists"
+        else
+          echo "Branch $BRANCH_NAME does not exist, creating it"
+          # Create and push the new branch off of main
+          git checkout main
+          git checkout -b $BRANCH_NAME
+          git push -u origin $BRANCH_NAME
+        fi
+
+        # Checkout the branch
+        git checkout $BRANCH_NAME
+      fi
